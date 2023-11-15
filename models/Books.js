@@ -19,9 +19,10 @@ const BooksSchema = new mongoose.Schema(
     },
     discount: {
       type: Number,
+	default: 0,
     },
     categories: {
-      type: Array,
+      type: String
     },
 
     star: {

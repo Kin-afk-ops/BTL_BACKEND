@@ -29,6 +29,11 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
+    requestDelete: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );
