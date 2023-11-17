@@ -11,7 +11,7 @@ router.post("/:userId", async (req, res) => {
       {
         title:
           "Chào mừng bạn đến với Tôi đọc sách - Trang web mua bán sách trực tuyến",
-        path: "/setting/:userId",
+        path: "/customer/:userId",
         content: "Hãy cập nhật thông tin cá nhân để nhận ngay ưu đãi!",
       },
     ],
@@ -32,7 +32,18 @@ router.get("/:userId", verifyTokenUser, async (req, res) => {
       userId: req.params.userId,
     });
 
-    res.status(200).json(notification.notify);
+    res.status(200).json(notification);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//GET ALL
+router.get("/", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+  try {
+    const notification = await Notification.find();
+
+    res.status(200).json(notification);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -56,18 +67,26 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE
-router.put("/delete/:id", async (req, res) => {
+router.delete("/delete/:id/:notificationId", async (req, res) => {
+  const { id, notificationId } = req.params;
+
   try {
-    await Notification.findByIdAndUpdate(
-      req.params.id,
-      {
-        $pull: { notify: { _id: req.body.id } },
-      },
-      { new: true }
-    );
-    res.status(200).json("Thông báo đã được xoá!");
+    const notification = await Notification.findById(id);
+
+    if (!notification) {
+      return res.status(404).json({ message: "notification not found" });
+    }
+
+    // Xoá phần tử trong mảng notify với _id tương ứng
+    notification.notify.pull(notificationId);
+
+    // Lưu lại thông tin người dùng
+    await notification.save();
+
+    res.status(200).json({ message: "Đã xoá thông báo" });
   } catch (error) {
-    res.status(500).json(error);
+    console.error(error);
+    res.status(500).json({ message: "Lỗi" });
   }
 });
 
@@ -92,13 +111,17 @@ router.put(
 );
 
 //DELETE USER
-router.delete("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
-  try {
-    await Notification.delete(req.params.id);
-    res.status(200).json("Đã xoá toàn bộ thông báo");
-  } catch (error) {
-    res.status(500).json(error);
+router.delete(
+  "deleteUser/:id",
+  verifyTokenAnhAuthorizationStaff,
+  async (req, res) => {
+    try {
+      await Notification.delete(req.params.id);
+      res.status(200).json("Đã xoá toàn bộ thông báo");
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 module.exports = router;

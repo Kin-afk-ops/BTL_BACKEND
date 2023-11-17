@@ -14,11 +14,13 @@ const bookRoute = require("./routes/book");
 const infoBookRoute = require("./routes/infoBook");
 const orderRoute = require("./routes/order");
 const notificationRoute = require("./routes/notification");
+const categoryRoute = require("./routes/category");
 const voucherRoute = require("./routes/voucher");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -43,4 +45,5 @@ app.use("/api/info", infoUserRoute);
 app.use("/api/infoStaff", infoStaffRoute);
 app.use("/api/infoBook", infoBookRoute);
 app.use("/api/notification", notificationRoute);
+app.use("/api/category", categoryRoute);
 app.use("/api/voucher", voucherRoute);

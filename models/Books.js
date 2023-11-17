@@ -5,12 +5,10 @@ const BooksSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     image: {
       type: String,
       required: true,
-      unique: true,
     },
 
     price: {
@@ -19,10 +17,10 @@ const BooksSchema = new mongoose.Schema(
     },
     discount: {
       type: Number,
-	default: 0,
+      default: 0,
     },
     categories: {
-      type: String
+      type: String,
     },
 
     star: {

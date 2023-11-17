@@ -6,13 +6,7 @@ const { verifyTokenAnhAuthorizationStaff } = require("../jwt/verifyTokenStaff");
 router.post("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
   const newInfoBook = new InfoBooks({
     _id: req.params.id,
-    name: req.body.name,
-    image: req.body.image,
-    price: req.body.price,
-    discount: req.body.discount,
-    quantity: req.body.quantity,
     infoBook: req.body.infoBook,
-    star: req.body.star,
   });
   try {
     const saveInfoBook = await newInfoBook.save();

@@ -6,35 +6,12 @@ const InfoBooksSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    image: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
-    price: {
-      type: Number,
-      required: true,
-    },
-    discount: {
-      type: Number,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      default: 1,
-    },
-    categories: {
-      type: Array,
-    },
 
     infoBook: {
       type: Object,
+      auth: {
+        type: String,
+      },
       publisher: {
         type: String,
         required: true,
@@ -64,6 +41,10 @@ const InfoBooksSchema = new mongoose.Schema(
         type: String,
       },
       numberPage: {
+        type: Number,
+        required: true,
+      },
+      quantity: {
         type: Number,
         required: true,
       },

@@ -16,22 +16,31 @@ router.post("/", verifyTokenAndAdminStaff, async (req, res) => {
 //GET
 router.get("/", async (req, res) => {
   try {
-    const cats = await Categories.find();
+    const cats = await Categories.find().sort({ createdAt: -1 });
     res.status(200).json(cats);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-//GET ONE ICON
-router.get("/:id", async (req, res) => {
+router.get("/find/:id", async (req, res) => {
   try {
-    const cat = await Categories.find();
+    const cats = await Categories.findById(req.params.id);
     res.status(200).json(cats);
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
+// //GET ONE ICON
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const cat = await Categories.find();
+//     res.status(200).json(cats);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 // UPDATE
 router.put("/:id", verifyTokenAndAdminStaff, async (req, res) => {
@@ -43,6 +52,7 @@ router.put("/:id", verifyTokenAndAdminStaff, async (req, res) => {
       },
       { new: true }
     );
+    res.status(200).json(updateCat);
   } catch (error) {
     res.status(500).json(error);
   }

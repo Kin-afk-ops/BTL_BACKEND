@@ -3,6 +3,7 @@ const CryptoJS = require("crypto-js");
 const Staffs = require("../models/Staffs");
 const Users = require("../models/Users");
 const Cart = require("../models/Cart");
+const Notification = require("../models/Notification");
 const {
   verifyTokenStaff,
   verifyTokenAnhAuthorizationBoss,
@@ -142,5 +143,23 @@ router.get("/cartUser", verifyTokenAndAdminStaff, async (req, res) => {
     res.status(500).json(error);
   }
 });
+
+//Get notification
+//GET
+router.get(
+  "/notification/:userId",
+  verifyTokenAndAdminStaff,
+  async (req, res) => {
+    try {
+      const notification = await Notification.findOne({
+        userId: req.params.userId,
+      });
+
+      res.status(200).json(notification);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
 
 module.exports = router;

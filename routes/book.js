@@ -66,7 +66,7 @@ router.get("/", async (req, res) => {
         },
       });
     } else {
-      books = await Books.find();
+      books = await Books.find().sort({ createdAt: -1 });
     }
 
     res.status(200).json(books);
