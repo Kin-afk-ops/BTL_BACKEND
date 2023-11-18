@@ -16,6 +16,8 @@ const orderRoute = require("./routes/order");
 const notificationRoute = require("./routes/notification");
 const categoryRoute = require("./routes/category");
 const voucherRoute = require("./routes/voucher");
+const cartRoute = require("./routes/cart");
+const requestRoute = require("./routes/request");
 
 const app = express();
 app.use(cors());
@@ -47,3 +49,5 @@ app.use("/api/infoBook", infoBookRoute);
 app.use("/api/notification", notificationRoute);
 app.use("/api/category", categoryRoute);
 app.use("/api/voucher", voucherRoute);
+app.use("/api/cart", cartRoute);
+app.use("/api/request", requestRoute);

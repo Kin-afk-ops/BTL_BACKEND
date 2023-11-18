@@ -22,9 +22,9 @@ router.post("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
 });
 
 //GET
-router.get("/:id", async (req, res) => {
+router.get("/:userId", async (req, res) => {
   try {
-    const infoUser = await InfoUsers.findById(req.params.id);
+    const infoUser = await InfoUsers.findOne(req.params.userId);
     res.status(200).json(infoUser);
   } catch (error) {
     res.status(500).json(error);

@@ -52,9 +52,9 @@ router.delete("/:id", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET USER CART
-router.get("/find/:userId", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/find/:id", verifyTokenAndAdminStaff, async (req, res) => {
   try {
-    const order = await Order.find({ userId: req.params.userId });
+    const order = await Order.findById(req.params.id);
 
     res.status(200).json(order);
   } catch (error) {
@@ -65,7 +65,7 @@ router.get("/find/:userId", verifyTokenAndAdminStaff, async (req, res) => {
 //GET ALL
 router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find().sort({ createdAt: -1 });
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json(error);

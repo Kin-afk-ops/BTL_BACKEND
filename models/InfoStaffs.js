@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const InfoStaffsSchema = new mongoose.Schema(
   {
-    _id: {
+    staffId: {
       type: String,
       required: true,
     },

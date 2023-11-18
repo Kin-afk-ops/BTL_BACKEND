@@ -3,6 +3,8 @@ const {
   verifyTokenUser,
   verifyTokenAnhAuthorizationUser,
 } = require("../jwt/verifyTokenUser");
+
+const { verifyTokenAndAdminStaff } = require("../jwt/verifyTokenStaff");
 const Cart = require("../models/Cart");
 
 //CREATE
@@ -44,18 +46,22 @@ router.delete("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
 });
 
 //GET USER CART
-router.get("/find/:userId", verifyTokenAnhAuthorizationUser, async (req, res) => {
-  try {
-    const cart = await Cart.findOne({ UserId: req.params.userId });
+router.get(
+  "/find/:userId",
+  verifyTokenAnhAuthorizationUser,
+  async (req, res) => {
+    try {
+      const cart = await Cart.findOne({ UserId: req.params.userId });
 
-    res.status(200).json(cart);
-  } catch (error) {
-    res.status(500).json(error);
+      res.status(200).json(cart);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 //GET ALL
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   try {
     const carts = await Cart.find();
     res.status(200).json(carts);
