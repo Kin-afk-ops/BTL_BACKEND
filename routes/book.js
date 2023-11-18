@@ -52,7 +52,7 @@ router.get("/find/:id", async (req, res) => {
 });
 
 //GET ALL BOOK
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   const qNew = req.query.qNew;
   const qCategory = req.query.qCategory;
   try {

@@ -1,8 +1,12 @@
 const router = require("express").Router();
 const CryptoJS = require("crypto-js");
 const Users = require("../models/Users");
+const Books = require("../models/Books");
 const { verifyTokenAndAdminStaff } = require("../jwt/verifyTokenStaff");
-const { verifyTokenAnhAuthorizationUser } = require("../jwt/verifyTokenUser");
+const {
+  verifyTokenAnhAuthorizationUser,
+  verifyTokenUser,
+} = require("../jwt/verifyTokenUser");
 
 //UPDATE
 router.put("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
@@ -85,6 +89,40 @@ router.get("/stats", verifyTokenAndAdminStaff, async (req, res) => {
       },
     ]);
     res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET ALL BOOK USER
+router.get("/book", verifyTokenUser, async (req, res) => {
+  const qNew = req.query.qNew;
+  const qCategory = req.query.qCategory;
+  try {
+    let books;
+    if (qNew) {
+      books = await Books.find().sort({ createdAt: -1 }).limit(5);
+    } else if (qCategory) {
+      books = await Books.find({
+        categories: {
+          $in: [qCategory],
+        },
+      });
+    } else {
+      books = await Books.find().sort({ createdAt: -1 });
+    }
+
+    res.status(200).json(books);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//GET CATEGORIES USER
+router.get("/categories", verifyTokenUser, async (req, res) => {
+  try {
+    const cats = await Categories.find().sort({ createdAt: -1 });
+    res.status(200).json(cats);
   } catch (err) {
     res.status(500).json(err);
   }

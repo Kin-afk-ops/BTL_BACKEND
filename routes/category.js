@@ -14,7 +14,7 @@ router.post("/", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET
-router.get("/", async (req, res) => {
+router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   try {
     const cats = await Categories.find().sort({ createdAt: -1 });
     res.status(200).json(cats);
@@ -31,16 +31,6 @@ router.get("/find/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-// //GET ONE ICON
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const cat = await Categories.find();
-//     res.status(200).json(cats);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
 
 // UPDATE
 router.put("/:id", verifyTokenAndAdminStaff, async (req, res) => {

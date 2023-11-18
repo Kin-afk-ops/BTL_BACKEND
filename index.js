@@ -38,6 +38,12 @@ app.listen(PORT, () => {
   console.log("connect to port " + PORT);
 });
 
+app.all("/", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/staff", staffRoute);
