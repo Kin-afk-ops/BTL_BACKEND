@@ -44,9 +44,9 @@ const verifyTokenAndBoss = (req, res, next) => {
   });
 };
 
-const verifyTokenAnhAuthorizationBoss = (req, res, next) => {
+const verifyTokenBossAndStaff = (req, res, next) => {
   verifyTokenStaff(req, res, () => {
-    if (req.staff.position === "boss") {
+    if (req.staff.position === "boss" || req.staff.position === "admin") {
       next();
     } else {
       res.status(403).json("You are not allowed to do that!");
@@ -59,5 +59,5 @@ module.exports = {
   verifyTokenAnhAuthorizationStaff,
   verifyTokenAndAdminStaff,
   verifyTokenAndBoss,
-  verifyTokenAnhAuthorizationBoss,
+  verifyTokenBossAndStaff,
 };

@@ -40,6 +40,16 @@ router.delete("/:id", verifyTokenAndAdminStaff, async (req, res) => {
   }
 });
 
+//DELETE ALL
+router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
+  try {
+    await Books.deleteMany({});
+    res.status(200).json("Books has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 //GET BOOK
 router.get("/find/:id", async (req, res) => {
   try {

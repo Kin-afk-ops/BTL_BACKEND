@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const InfoBooksSchema = new mongoose.Schema(
   {
-    _id: {
+    bookId: {
       type: String,
       required: true,
     },
@@ -48,10 +48,6 @@ const InfoBooksSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
-    },
-    star: {
-      type: Number,
-      default: 0,
     },
   },
   { timestamps: true }

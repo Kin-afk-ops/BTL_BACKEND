@@ -1,18 +1,14 @@
 const router = require("express").Router();
 const InfoStaffs = require("../models/InfoStaffs");
-const { verifyTokenAnhAuthorizationStaff } = require("../jwt/verifyTokenStaff");
+const {
+  verifyTokenAnhAuthorizationStaff,
+  verifyTokenBossAndStaff,
+  verifyTokenAndBoss,
+} = require("../jwt/verifyTokenStaff");
 
 //CREATE
-router.post("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
-  const newInfoStaff = new InfoStaffs({
-    _id: req.params.id,
-    lastName: req.body.lastName,
-    firstName: req.body.firstName,
-    phone: req.body.phone,
-    sex: req.body.sex,
-    birthday: req.body.birthday,
-    address: req.body.address,
-  });
+router.post("/", verifyTokenBossAndStaff, async (req, res) => {
+  const newInfoStaff = new InfoStaffs(req.body);
   try {
     const saveInfoStaff = await newInfoStaff.save();
     res.status(200).json(saveInfoStaff);
@@ -22,9 +18,9 @@ router.post("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
 });
 
 //GET
-router.get("/staffId", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+router.get("/:staffId", verifyTokenBossAndStaff, async (req, res) => {
   try {
-    const infoStaff = await InfoStaffs.findOne(req.params.staffId);
+    const infoStaff = await InfoStaffs.findOne({ staffId: req.params.staffId });
     res.status(200).json(infoStaff);
   } catch (error) {
     res.status(500).json(error);
@@ -32,7 +28,7 @@ router.get("/staffId", verifyTokenAnhAuthorizationStaff, async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+router.put("/:id", verifyTokenBossAndStaff, async (req, res) => {
   try {
     const updateInfoStaff = await InfoStaffs.findByIdAndUpdate(
       req.params.id,
@@ -48,9 +44,18 @@ router.put("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+router.delete("/:staffId", verifyTokenAndBoss, async (req, res) => {
   try {
-    await InfoStaffs.findByIdAndDelete(req.params.id);
+    await InfoStaffs.findOneAndDelete({ staffId: req.params.staffId });
+    res.status(200).json("Info Staff has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.delete("/", verifyTokenAndBoss, async (req, res) => {
+  try {
+    await InfoStaffs.findByIdAndDelete();
     res.status(200).json("Info Staff has been deleted...");
   } catch (error) {
     res.status(500).json(error);

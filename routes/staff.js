@@ -6,13 +6,13 @@ const Cart = require("../models/Cart");
 const Notification = require("../models/Notification");
 const {
   verifyTokenStaff,
-  verifyTokenAnhAuthorizationBoss,
   verifyTokenAndAdminStaff,
   verifyTokenAndBoss,
+  verifyTokenBossAndStaff,
 } = require("../jwt/verifyTokenStaff");
 
 //UPDATE
-router.put("/:id", verifyTokenAnhAuthorizationBoss, async (req, res) => {
+router.put("/updateStaff/:id", verifyTokenBossAndStaff, async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
       req.body.password,
@@ -56,84 +56,22 @@ router.put("/updateUser/:id", verifyTokenAndAdminStaff, async (req, res) => {
   }
 });
 
-//DELETE
-
-router.delete("/:id", verifyTokenAnhAuthorizationBoss, async (req, res) => {
+router.get("/find/:id", verifyTokenBossAndStaff, async (req, res) => {
   try {
-    await Staffs.findByIdAndDelete(req.params.id);
-    res.status(200).json("Staff has been deleted...");
+    let staff = await Staffs.findById(req.params.id);
+    const hashedPassword = CryptoJS.AES.decrypt(
+      staff.password,
+      process.env.PASS_SEC
+    );
+    staff.password = hashedPassword.toString(CryptoJS.enc.Utf8);
+
+    res.status(200).json(staff);
   } catch (error) {
     res.status(500).json(error);
-  }
-});
-
-//GET USER
-router.get("/find/:id", verifyTokenAndBoss, async (req, res) => {
-  try {
-    const user = await Staffs.findById(req.params.id);
-    const { password, ...others } = user._doc;
-
-    res.status(200).json({ ...others });
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-//GET ALL STAFF
-router.get("/", verifyTokenAndBoss, async (req, res) => {
-  const query = req.query.new;
-  try {
-    const staffs = query
-      ? await Staffs.find().sort({ _id: -1 }).limit(5)
-      : await Staffs.find();
-
-    res.status(200).json(staffs);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-//GET USERS STATS
-router.get("/stats", verifyTokenAndBoss, async (req, res) => {
-  const date = new Date();
-  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-
-  try {
-    const data = await Users.aggregate([
-      { $match: { createdAt: { $gte: lastYear } } },
-      {
-        $project: {
-          month: { $month: "$createdAt" },
-        },
-      },
-      {
-        $group: {
-          _id: "$month",
-          total: { $sum: 1 },
-        },
-      },
-    ]);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
   }
 });
 
 //CART
-//GET USER CART
-router.get(
-  "/cartUser/find/:userId",
-  verifyTokenAndAdminStaff,
-  async (req, res) => {
-    try {
-      const cart = await Cart.findOne({ UserId: req.params.userId });
-
-      res.status(200).json(cart);
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
-);
 
 router.get("/cartUser", verifyTokenAndAdminStaff, async (req, res) => {
   try {

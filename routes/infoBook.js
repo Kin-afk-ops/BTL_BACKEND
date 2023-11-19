@@ -1,13 +1,13 @@
 const router = require("express").Router();
 const InfoBooks = require("../models/InfoBooks");
-const { verifyTokenAnhAuthorizationStaff } = require("../jwt/verifyTokenStaff");
+const {
+  verifyTokenAnhAuthorizationStaff,
+  verifyTokenAndAdminStaff,
+} = require("../jwt/verifyTokenStaff");
 
 //CREATE
-router.post("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
-  const newInfoBook = new InfoBooks({
-    _id: req.params.id,
-    infoBook: req.body.infoBook,
-  });
+router.post("/", verifyTokenAndAdminStaff, async (req, res) => {
+  const newInfoBook = new InfoBooks(req.body);
   try {
     const saveInfoBook = await newInfoBook.save();
     res.status(200).json(saveInfoBook);
@@ -17,7 +17,7 @@ router.post("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+router.put("/:id", verifyTokenAndAdminStaff, async (req, res) => {
   try {
     const updateInfoBook = await InfoBooks.findByIdAndUpdate(
       req.params.id,
@@ -33,9 +33,9 @@ router.put("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
 });
 
 //GET
-router.get("/:id", async (req, res) => {
+router.get("/:bookId", async (req, res) => {
   try {
-    const infoBook = await InfoBooks.findById(req.params.id);
+    const infoBook = await InfoBooks.findOne({ bookId: req.params.bookId });
     res.status(200).json(infoBook);
   } catch (error) {
     res.status(500).json(error);
@@ -43,9 +43,19 @@ router.get("/:id", async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+router.delete("/:id", verifyTokenAndAdminStaff, async (req, res) => {
   try {
     await InfoBooks.findByIdAndDelete(req.params.id);
+    res.status(200).json("Info books has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//DELETE ALL
+router.delete("/", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+  try {
+    await InfoBooks.deleteMany();
     res.status(200).json("Info books has been deleted...");
   } catch (error) {
     res.status(500).json(error);

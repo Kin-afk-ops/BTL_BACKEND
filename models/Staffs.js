@@ -15,7 +15,7 @@ const StaffsSchema = new mongoose.Schema(
     position: {
       type: String,
       required: true,
-      default: "none",
+      default: "admin",
     },
   },
   { timestamps: true }

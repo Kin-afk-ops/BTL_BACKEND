@@ -2,6 +2,7 @@ const router = require("express").Router();
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/Users");
+const { verifyTokenAndBoss } = require("../jwt/verifyTokenStaff");
 const Staffs = require("../models/Staffs");
 
 //REGISTER
@@ -52,7 +53,7 @@ router.post("/login", async (req, res) => {
 });
 
 //Create staff
-router.post("/staff/create", async (req, res) => {
+router.post("/staff/create", verifyTokenAndBoss, async (req, res) => {
   const newStaff = new Staffs({
     username: req.body.username,
     password: CryptoJS.AES.encrypt(

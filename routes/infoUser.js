@@ -3,16 +3,8 @@ const InfoUsers = require("../models/InfoUsers");
 const { verifyTokenAnhAuthorizationUser } = require("../jwt/verifyTokenUser");
 
 //CREATE
-router.post("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
-  const newInfoUser = new InfoUsers({
-    _id: req.params.id,
-    lastName: req.body.lastName,
-    firstName: req.body.firstName,
-    phone: req.body.phone,
-    sex: req.body.sex,
-    birthday: req.body.birthday,
-    address: req.body.address,
-  });
+router.post("/", verifyTokenAnhAuthorizationUser, async (req, res) => {
+  const newInfoUser = new InfoUsers(req.body);
   try {
     const saveInfoUser = await newInfoUser.save();
     res.status(200).json(saveInfoUser);
@@ -24,7 +16,7 @@ router.post("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
 //GET
 router.get("/:userId", async (req, res) => {
   try {
-    const infoUser = await InfoUsers.findOne(req.params.userId);
+    const infoUser = await InfoUsers.findOne({ userId: req.params.userId });
     res.status(200).json(infoUser);
   } catch (error) {
     res.status(500).json(error);

@@ -4,7 +4,7 @@ const {
   verifyTokenAnhAuthorizationStaff,
   verifyTokenAndAdminStaff,
   verifyTokenAndBoss,
-  verifyTokenAnhAuthorizationBoss,
+  verifyTokenBossAndStaff,
 } = require("../jwt/verifyTokenStaff");
 
 const {
@@ -73,7 +73,7 @@ router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET MONTHLY INCOME
-router.get("/income", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/income", verifyTokenBossAndStaff, async (req, res) => {
   const date = new Date();
   const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
   const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
