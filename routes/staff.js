@@ -33,7 +33,7 @@ router.put("/updateStaff/:id", verifyTokenBossAndStaff, async (req, res) => {
   }
 });
 
-//UPDATE USERS
+//UPDATE STAFF
 router.put("/updateUser/:id", verifyTokenAndAdminStaff, async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(

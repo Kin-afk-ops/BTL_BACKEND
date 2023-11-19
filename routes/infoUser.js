@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const InfoUsers = require("../models/InfoUsers");
 const { verifyTokenAnhAuthorizationUser } = require("../jwt/verifyTokenUser");
+const { verifyTokenAndAdminStaff } = require("../jwt/verifyTokenStaff");
 
 //CREATE
 router.post("/", verifyTokenAnhAuthorizationUser, async (req, res) => {
@@ -40,9 +41,18 @@ router.put("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
+router.delete("/:userId", verifyTokenAndAdminStaff, async (req, res) => {
   try {
-    await InfoUsers.findByIdAndDelete(req.params.id);
+    await InfoUsers.findOneAndDelete({ userId: req.params.userId });
+    res.status(200).json("Info User has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
+  try {
+    await InfoUsers.deleteMany();
     res.status(200).json("Info User has been deleted...");
   } catch (error) {
     res.status(500).json(error);

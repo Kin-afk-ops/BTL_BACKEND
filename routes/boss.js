@@ -49,8 +49,20 @@ router.delete("/", verifyTokenAndBoss, async (req, res) => {
 
 //GET ALL STAFF
 router.get("/", verifyTokenAndBoss, async (req, res) => {
+  const search = req.query.search;
+
   try {
-    const staffs = await Staffs.find({ position: "admin" });
+    let staffs = [];
+    if (search) {
+      staffs = await Staffs.find({
+        position: "admin",
+        username: /search/,
+      }).sort({
+        createdAt: -1,
+      });
+    } else {
+      staffs = await Staffs.find({ position: "admin" }).sort({ createdAt: -1 });
+    }
 
     res.status(200).json(staffs);
   } catch (error) {

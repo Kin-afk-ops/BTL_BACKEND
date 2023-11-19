@@ -2,7 +2,10 @@ const router = require("express").Router();
 const CryptoJS = require("crypto-js");
 const Users = require("../models/Users");
 const Books = require("../models/Books");
-const { verifyTokenAndAdminStaff } = require("../jwt/verifyTokenStaff");
+const {
+  verifyTokenAndAdminStaff,
+  verifyTokenBossAndStaff,
+} = require("../jwt/verifyTokenStaff");
 const {
   verifyTokenAnhAuthorizationUser,
   verifyTokenUser,
@@ -42,6 +45,15 @@ router.delete("/:id", verifyTokenAndAdminStaff, async (req, res) => {
   }
 });
 
+router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
+  try {
+    await Users.deleteMany();
+    res.status(200).json("User has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 //GET USER
 router.get("/find/:id", verifyTokenAndAdminStaff, async (req, res) => {
   try {
@@ -69,7 +81,7 @@ router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET USERS STATS
-router.get("/stats", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/stats", verifyTokenBossAndStaff, async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 

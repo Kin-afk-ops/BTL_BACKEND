@@ -25,6 +25,15 @@ router.delete("/:id", verifyTokenAndAdminStaff, async (req, res) => {
   }
 });
 
+router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
+  try {
+    await Request.findByIdAndDelete();
+    res.status(200).json("Request has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 //GET ALL
 router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   try {

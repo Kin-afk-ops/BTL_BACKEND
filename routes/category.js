@@ -59,4 +59,14 @@ router.delete("/:id", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //DELETE
+router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
+  try {
+    await Categories.deleteMany();
+    res.status(200).json("Category has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+//DELETE
 module.exports = router;
