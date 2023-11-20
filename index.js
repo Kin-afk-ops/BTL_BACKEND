@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-
 const mongoose = require("mongoose");
 
 //Router
@@ -19,6 +18,7 @@ const voucherRoute = require("./routes/voucher");
 const cartRoute = require("./routes/cart");
 const requestRoute = require("./routes/request");
 const bossRoute = require("./routes/boss");
+const imageRouter = require("./routes/image");
 
 const app = express();
 app.use(cors());
@@ -59,3 +59,4 @@ app.use("/api/voucher", voucherRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/request", requestRoute);
 app.use("/api/boss", bossRoute);
+app.use("/api/image", imageRouter);

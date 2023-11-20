@@ -8,8 +8,14 @@ const CategoriesSchema = new mongoose.Schema(
       unique: true,
     },
     image: {
-      type: String,
-      required: true,
+      path: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
     },
     path: {
       type: String,
