@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Notification = require("../models/Notification");
-const { verifyTokenAnhAuthorizationStaff } = require("../jwt/verifyTokenStaff");
+const { verifyTokenAndAdminStaff } = require("../jwt/verifyTokenStaff");
 const { verifyTokenUser } = require("../jwt/verifyTokenUser");
 
 //CREATE
@@ -11,7 +11,7 @@ router.post("/:userId", async (req, res) => {
       {
         title:
           "Chào mừng bạn đến với Tôi đọc sách - Trang web mua bán sách trực tuyến",
-        path: "/customer/:userId",
+        path: "/customer/edit",
         content: "Hãy cập nhật thông tin cá nhân để nhận ngay ưu đãi!",
       },
     ],
@@ -26,7 +26,7 @@ router.post("/:userId", async (req, res) => {
 });
 
 //GET
-router.get("/:userId", verifyTokenUser, async (req, res) => {
+router.get("/:userId", async (req, res) => {
   try {
     const notification = await Notification.findOne({
       userId: req.params.userId,
@@ -39,7 +39,7 @@ router.get("/:userId", verifyTokenUser, async (req, res) => {
 });
 
 //GET ALL
-router.get("/", verifyTokenAnhAuthorizationStaff, async (req, res) => {
+router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   try {
     const notification = await Notification.find();
 
@@ -50,7 +50,7 @@ router.get("/", verifyTokenAnhAuthorizationStaff, async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyTokenAndAdminStaff, async (req, res) => {
   try {
     const newNotify = req.body;
     const updateNotification = await Notification.findByIdAndUpdate(
@@ -67,61 +67,47 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE
-router.delete("/delete/:id/:notificationId", async (req, res) => {
-  const { id, notificationId } = req.params;
+router.delete(
+  "/delete/:id/:notificationId",
+  verifyTokenAndAdminStaff,
+  async (req, res) => {
+    const { id, notificationId } = req.params;
 
-  try {
-    const notification = await Notification.findById(id);
+    try {
+      const notification = await Notification.findById(id);
 
-    if (!notification) {
-      return res.status(404).json({ message: "notification not found" });
+      if (!notification) {
+        return res.status(404).json({ message: "notification not found" });
+      }
+
+      // Xoá phần tử trong mảng notify với _id tương ứng
+      notification.notify.pull(notificationId);
+
+      // Lưu lại thông tin người dùng
+      await notification.save();
+
+      res.status(200).json({ message: "Đã xoá thông báo" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Lỗi" });
     }
-
-    // Xoá phần tử trong mảng notify với _id tương ứng
-    notification.notify.pull(notificationId);
-
-    // Lưu lại thông tin người dùng
-    await notification.save();
-
-    res.status(200).json({ message: "Đã xoá thông báo" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Lỗi" });
   }
-});
+);
 
 //DELETE ALL
-router.put(
-  "/deleteAll/:id",
-  verifyTokenAnhAuthorizationStaff,
-  async (req, res) => {
-    try {
-      await Notification.findByIdAndUpdate(
-        req.params.id,
-        {
-          notify: [],
-        },
-        { new: true }
-      );
-      res.status(200).json("Đã xoá toàn bộ thông báo!");
-    } catch (error) {
-      res.status(500).json(error);
-    }
+router.put("/deleteAll/:id", verifyTokenAndAdminStaff, async (req, res) => {
+  try {
+    await Notification.findByIdAndUpdate(
+      req.params.id,
+      {
+        notify: [],
+      },
+      { new: true }
+    );
+    res.status(200).json("Đã xoá toàn bộ thông báo!");
+  } catch (error) {
+    res.status(500).json(error);
   }
-);
-
-//DELETE USER
-router.delete(
-  "deleteUser/:id",
-  verifyTokenAnhAuthorizationStaff,
-  async (req, res) => {
-    try {
-      await Notification.delete(req.params.id);
-      res.status(200).json("Đã xoá toàn bộ thông báo");
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  }
-);
+});
 
 module.exports = router;

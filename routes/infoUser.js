@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const InfoUsers = require("../models/InfoUsers");
-const { verifyTokenAnhAuthorizationUser } = require("../jwt/verifyTokenUser");
+const { verifyTokenUser } = require("../jwt/verifyTokenUser");
 const { verifyTokenAndAdminStaff } = require("../jwt/verifyTokenStaff");
 
 //CREATE
-router.post("/", verifyTokenAnhAuthorizationUser, async (req, res) => {
+router.post("/", async (req, res) => {
   const newInfoUser = new InfoUsers(req.body);
   try {
     const saveInfoUser = await newInfoUser.save();
@@ -25,7 +25,7 @@ router.get("/:userId", async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", verifyTokenAnhAuthorizationUser, async (req, res) => {
+router.put("/:id", verifyTokenUser, async (req, res) => {
   try {
     const updateInfoUser = await InfoUsers.findByIdAndUpdate(
       req.params.id,

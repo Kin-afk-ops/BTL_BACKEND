@@ -55,7 +55,7 @@ router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET USER
-router.get("/find/:id", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/find/:id", async (req, res) => {
   try {
     const user = await Users.findById(req.params.id);
     const { password, ...others } = user._doc;
@@ -71,8 +71,8 @@ router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
   const query = req.query.new;
   try {
     const users = query
-      ? await Users.find().sort({ _id: -1 }).limit(5)
-      : await Users.find();
+      ? await Users.find().sort({ createdAt: -1 }).limit(5)
+      : await Users.find().sort({ createdAt: -1 });
 
     res.status(200).json(users);
   } catch (error) {
