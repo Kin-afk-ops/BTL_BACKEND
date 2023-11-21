@@ -14,9 +14,9 @@ router.post("/", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET
-router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const cats = await Categories.find().sort({ createdAt: -1 });
+    const cats = await Categories.find();
     res.status(200).json(cats);
   } catch (err) {
     res.status(500).json(err);
