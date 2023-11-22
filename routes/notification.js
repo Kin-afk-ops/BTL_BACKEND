@@ -67,32 +67,28 @@ router.put("/:id", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //DELETE
-router.delete(
-  "/delete/:id/:notificationId",
-  verifyTokenAndAdminStaff,
-  async (req, res) => {
-    const { id, notificationId } = req.params;
+router.delete("/delete/:id/:notificationId", async (req, res) => {
+  const { id, notificationId } = req.params;
 
-    try {
-      const notification = await Notification.findById(id);
+  try {
+    const notification = await Notification.findById(id);
 
-      if (!notification) {
-        return res.status(404).json({ message: "notification not found" });
-      }
-
-      // Xoá phần tử trong mảng notify với _id tương ứng
-      notification.notify.pull(notificationId);
-
-      // Lưu lại thông tin người dùng
-      await notification.save();
-
-      res.status(200).json({ message: "Đã xoá thông báo" });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Lỗi" });
+    if (!notification) {
+      return res.status(404).json({ message: "notification not found" });
     }
+
+    // Xoá phần tử trong mảng notify với _id tương ứng
+    notification.notify.pull(notificationId);
+
+    // Lưu lại thông tin người dùng
+    await notification.save();
+
+    res.status(200).json({ message: "Đã xoá thông báo" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi" });
   }
-);
+});
 
 //DELETE ALL
 router.put("/deleteAll/:id", verifyTokenAndAdminStaff, async (req, res) => {

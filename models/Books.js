@@ -28,11 +28,6 @@ const BooksSchema = new mongoose.Schema(
     categories: {
       type: String,
     },
-
-    star: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 );

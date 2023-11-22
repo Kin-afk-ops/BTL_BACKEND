@@ -61,9 +61,9 @@ router.delete("/", verifyTokenAndAdminStaff, async (req, res) => {
 });
 
 //GET USER CART
-router.get("/find/:id", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/find/:userId", verifyTokenUser, async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findOne({ userId: req.params.userId });
 
     res.status(200).json(order);
   } catch (error) {

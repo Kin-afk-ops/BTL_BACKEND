@@ -62,13 +62,13 @@ router.get("/find/:id", async (req, res) => {
 });
 
 //GET ALL BOOK
-router.get("/", verifyTokenAndAdminStaff, async (req, res) => {
+router.get("/", async (req, res) => {
   const qNew = req.query.qNew;
   const qCategory = req.query.qCategory;
   try {
     let books;
     if (qNew) {
-      books = await Books.find().sort({ createdAt: -1 }).limit(5);
+      books = await Books.find().sort({ createdAt: -1 }).limit(15);
     } else if (qCategory) {
       books = await Books.find({
         categories: {

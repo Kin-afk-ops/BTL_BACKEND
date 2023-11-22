@@ -11,42 +11,14 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    books: [
-      {
-        bookId: {
-          type: String,
-          required: true,
-        },
-        name: {
-          type: String,
-          require: true,
-        },
-        image: {
-          type: String,
-          require: true,
-        },
-        currentPrice: {
-          type: Number,
-          require: true,
-        },
-        quantity: {
-          type: Number,
-          default: 1,
-        },
-      },
-    ],
+    products: [],
     phone: {
       type: String,
       require: true,
     },
-    amount: {
+    totalPrice: {
       type: Number,
       required: true,
-    },
-    collected: {
-      type: Number,
-      required: true,
-      default: 0,
     },
     address: {
       type: Object,
@@ -56,10 +28,8 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       default: "Đang chuẩn bị hàng",
     },
-    requestDelete: {
-      type: Boolean,
-      required: true,
-      default: false,
+    note: {
+      type: String,
     },
   },
   { timestamps: true }
